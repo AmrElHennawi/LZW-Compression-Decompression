@@ -1,40 +1,32 @@
-import org.w3c.dom.Text;
-
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.*;
 
 public class LZW {
 
+    public static ArrayList<Integer> encode(String plainText) {
+        Map<String, Integer> dictionary = new HashMap<>();
+        ArrayList<Integer> compressedOutput = new ArrayList<>();
+        int dictSize = 128;
+        String subText = "";
 
-    // TODO
-    // takes a string of text
-    // returns ArrayList containing the numbers/integers
-    public static void encode(String inputFileName, String outputFileName) {
-//        Map<String, Integer> dictionary = new HashMap<>();
-//        ArrayList<Integer> compressedOutput = new ArrayList<>();
-//        String plainText = LZWFileHandler.readTxtFromFile(inputFileName);
-//        int dictSize = 128;
-//        String subText = "";
-//
-//        for (int i = 0; i < dictSize; i++) {
-//            dictionary.put(String.valueOf((char) i), i);
-//        }
-//
-//        for (int i = 0; i < plainText.length(); i++) {
-//            char currentChar = plainText.charAt(i);
-//            String subTextPlusCurrent = subText + currentChar;
-//
-//            if (dictionary.containsKey(subTextPlusCurrent)) {
-//                subText = subTextPlusCurrent;
-//            } else {
-//                compressedOutput.add(dictionary.get(subText));
-//                dictionary.put(subTextPlusCurrent, dictSize++);
-//                subText = String.valueOf(currentChar);
-//            }
-//        }
-//
-//        LZWFileHandler.writeCompressedFile(outputFileName, compressedOutput);
+        for (int i = 0; i < dictSize; i++) {
+            dictionary.put(String.valueOf((char) i), i);
+        }
+
+        for (int i = 0; i < plainText.length(); i++) {
+            char currentChar = plainText.charAt(i);
+            String subTextPlusCurrent = subText + currentChar;
+
+            if (dictionary.containsKey(subTextPlusCurrent)) {
+                subText = subTextPlusCurrent;
+            } else {
+                compressedOutput.add(dictionary.get(subText));
+                dictionary.put(subTextPlusCurrent, dictSize++);
+                subText = String.valueOf(currentChar);
+            }
+        }
+
+        return compressedOutput;
     }
 
     public static String decode(ArrayList<Integer> encodedData) {
@@ -79,9 +71,9 @@ public class LZW {
         return plainText.toString();
     }
 
-    // TODO
-    public static void compressFile(String inputFileName, String outputFileName){
-
+    public static void compressFile(String inputFileName, String outputFileName) throws IOException {
+        String plainText = TextFileHandler.readFile(inputFileName);
+        LZWFileHandler.writeFile(outputFileName, encode(plainText));
     }
 
     public static void decompressFile(String inputFileName, String outputFileName) throws IOException {

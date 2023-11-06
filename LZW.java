@@ -3,10 +3,12 @@ import java.util.*;
 public class LZW {
 
     public static void main(String[] args) {
-        // Scanner in = new Scanner(System.in);
-        // System.out.print("Enter the string to compress: ");
-        // String str = in.nextLine();
-        // System.out.println("Compressed Output: " + compression(str));
+         Scanner in = new Scanner(System.in);
+         System.out.print("Enter the string to compress: ");
+         String str = in.nextLine();
+         System.out.println("Compressed Output: " + encode(str));
+        System.out.println("Decompressed Output: " + decode(encode(str)));
+
     }
 
     public static ArrayList<Integer> encode(String plainText) {
@@ -57,7 +59,7 @@ public class LZW {
         // for the rest of character
         int size = encodedData.size();
         for (int i = 1; i < size; i++){
-            if (dictionary.containsKey(i)){
+            if (dictionary.containsKey(encodedData.get(i))){
                 // add to output stream
                 plainText.append(dictionary.get(encodedData.get(i)));
 

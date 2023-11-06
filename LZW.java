@@ -9,7 +9,7 @@ public class LZW {
         // System.out.println("Compressed Output: " + compression(str));
     }
 
-    public static ArrayList<Integer> compression(String plainText) {
+    public static ArrayList<Integer> encode(String plainText) {
         Map<String, Integer> dictionary = new HashMap<>();
         ArrayList<Integer> compressedOutput = new ArrayList<>();
         int dictSize = 128;
@@ -39,14 +39,43 @@ public class LZW {
         return compressedOutput;
     }
 
-    public static String Decompression(ArrayList<Integer> encodedData) {
-        Map<Integer, Character> dictionary = new HashMap<>();
+    public static String decode(ArrayList<Integer> encodedData){
+        Map<Integer, String> dictionary = new HashMap<>();
+        StringBuilder plainText = new StringBuilder();
 
-        for (int i = 0; i < 128; i++) {
-            dictionary.put(i, (char) i);
+        final int initialDictionaryEnd = 128;
+
+        for (int i = 0; i < initialDictionaryEnd; i++){
+            dictionary.put(i, String.valueOf((char) i));
+        }
+        // if not empty add the first char to the output stream
+        if (!encodedData.isEmpty()){
+            plainText.append(dictionary.get(encodedData.get(0)));
         }
 
-        // dummy return
-        return "";
+        int dictionaryCounter = initialDictionaryEnd;
+        // for the rest of character
+        int size = encodedData.size();
+        for (int i = 1; i < size; i++){
+            if (dictionary.containsKey(i)){
+                // add to output stream
+                plainText.append(dictionary.get(encodedData.get(i)));
+
+                // add to dictionary
+                // all symbol from previous step + first symbol from current step
+                String newString = dictionary.get(encodedData.get(i-1)) + dictionary.get(encodedData.get(i)).charAt(0);
+                dictionary.put(dictionaryCounter, newString);
+                dictionaryCounter++;
+            } else {
+                // symbols in previous step + first symbol in previous step
+                String newString = dictionary.get(encodedData.get(i-1)) + dictionary.get(encodedData.get(i-1)).charAt(0);
+                dictionary.put(dictionaryCounter, newString);
+                dictionaryCounter++;
+
+                plainText.append(dictionary.get(encodedData.get(i)));
+            }
+        }
+
+        return plainText.toString();
     }
 }

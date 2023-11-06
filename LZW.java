@@ -1,58 +1,40 @@
+import org.w3c.dom.Text;
+
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.*;
 
 public class LZW {
 
-    public static void main(String[] args) {
-        while (true) {
-            printMainMenu();
-            String option = System.console().readLine();
-            if (option.equals("1"))
-                compressionOption();
-            // else if (option.equals("2"))
-            // decompressionOption();
-            else if (option.equals("3")) {
-                System.out.println("Thanks for using our LZW Algorithms!");
-                System.exit(0);
-            } else
-                System.out.println("Invalid option. Please choose 1, 2, or 3 :)");
-        }
-    }
 
-    public static void printMainMenu() {
-        System.out.println("LZW Compression and Decompression Menu :)");
-        System.out.println("1. Compression");
-        System.out.println("2. Decompression");
-        System.out.println("3. exit.");
-        System.out.print("Choose an option (1, 2, or 3): ");
-    }
-
-    public static void compression(String inputFileName, String outputFileName) {
-        Map<String, Integer> dictionary = new HashMap<>();
-        ArrayList<Integer> compressedOutput = new ArrayList<>();
-        String plainText = LZWFileHandler.readTxtFromFile(inputFileName);
-        int dictSize = 128;
-        String subText = "";
-
-        for (int i = 0; i < dictSize; i++) {
-            dictionary.put(String.valueOf((char) i), i);
-        }
-
-        for (int i = 0; i < plainText.length(); i++) {
-            char currentChar = plainText.charAt(i);
-            String subTextPlusCurrent = subText + currentChar;
-
-            if (dictionary.containsKey(subTextPlusCurrent)) {
-                subText = subTextPlusCurrent;
-            } else {
-                compressedOutput.add(dictionary.get(subText));
-                dictionary.put(subTextPlusCurrent, dictSize++);
-                subText = String.valueOf(currentChar);
-            }
-        }
-
-        LZWFileHandler.writeCompressedFile(outputFileName, compressedOutput);
-        ;
+    // TODO
+    // takes a string of text
+    // returns ArrayList containing the numbers/integers
+    public static void encode(String inputFileName, String outputFileName) {
+//        Map<String, Integer> dictionary = new HashMap<>();
+//        ArrayList<Integer> compressedOutput = new ArrayList<>();
+//        String plainText = LZWFileHandler.readTxtFromFile(inputFileName);
+//        int dictSize = 128;
+//        String subText = "";
+//
+//        for (int i = 0; i < dictSize; i++) {
+//            dictionary.put(String.valueOf((char) i), i);
+//        }
+//
+//        for (int i = 0; i < plainText.length(); i++) {
+//            char currentChar = plainText.charAt(i);
+//            String subTextPlusCurrent = subText + currentChar;
+//
+//            if (dictionary.containsKey(subTextPlusCurrent)) {
+//                subText = subTextPlusCurrent;
+//            } else {
+//                compressedOutput.add(dictionary.get(subText));
+//                dictionary.put(subTextPlusCurrent, dictSize++);
+//                subText = String.valueOf(currentChar);
+//            }
+//        }
+//
+//        LZWFileHandler.writeCompressedFile(outputFileName, compressedOutput);
     }
 
     public static String decode(ArrayList<Integer> encodedData) {
@@ -97,15 +79,14 @@ public class LZW {
         return plainText.toString();
     }
 
-    public static void compressionOption() {
+    // TODO
+    public static void compressFile(String inputFileName, String outputFileName){
 
-        System.out.print("Enter the input file name: ");
-        String inputFileName = System.console().readLine();
+    }
 
-        System.out.print("Enter the output file name: ");
-        String outputFileName = System.console().readLine();
-        compression(inputFileName, outputFileName);
-        System.out.println("Compression complete. Compressed data saved to " + outputFileName);
+    public static void decompressFile(String inputFileName, String outputFileName) throws IOException {
+        ArrayList<Integer> encodedData = LZWFileHandler.readFile(inputFileName);
+        TextFileHandler.writeFile(outputFileName, decode(encodedData));
     }
 
 }
